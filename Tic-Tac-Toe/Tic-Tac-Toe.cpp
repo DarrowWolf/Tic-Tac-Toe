@@ -55,11 +55,11 @@ bool checkWin(char board[][SIZE], char symbol, bool& draw) {
     }
     //Check Diagonal 
     if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
-        return true; // Diagonal from top-left to bottom-right
+        return true; // Diagonal check from top-left to bottom-right
     }
 
     if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
-        return true; // Diagonal from top-right to bottom-left
+        return true; // Diagonal check from top-right to bottom-left
     }
 
     // Check for a draw
@@ -80,37 +80,59 @@ bool checkWin(char board[][SIZE], char symbol, bool& draw) {
 
 int main()
 {
-    int player = 1;
-    int choice;
-    bool draw = false;
-    printBoard(board);
-
-
+bool replay = true;
     do {
-        choice = getMove(board, player);
-
-        // Update the board with the player's move
-        int row = (choice - 1) / SIZE;
-        int col = (choice - 1) % SIZE;
-        board[row][col] = (player == 1) ? 'X' : 'O';
-
-        // Print the updated board
+        int player = 1;
+        int choice;
+        bool draw = false;
         printBoard(board);
 
-        // Check if the current player has won or draw
-        if (checkWin(board, (player == 1) ? 'X' : 'O', draw)) {
-            if (draw) {
-                printf("The game is a draw.\n");
+        do {
+            choice = getMove(board, player);
+
+            // Update the board with the player's move
+            int row = (choice - 1) / SIZE;
+            int col = (choice - 1) % SIZE;
+            board[row][col] = (player == 1) ? 'X' : 'O';
+
+            // Print the updated board and remove previous board so it won't clog up the console
+            std::system("cls");
+            printBoard(board);
+
+            // Check if the current player has won or draw
+            if (checkWin(board, (player == 1) ? 'X' : 'O', draw)) {
+                if (draw) {
+                    printf("The game is a draw.\n");
+                }
+                else {
+                    printf("Congratulations! Player %d has won.\n", player);
+                }
+                break; 
             }
-            else {
-                printf("Congratulations! Player %d has won.\n", player);
+
+            // Switch to the other player
+            player = (player == 1) ? 2 : 1;
+        } while (true);
+
+        // Ask if the player wants to play again
+        char replayChoice;
+        printf("Do you want to play again? (y/n): ");
+        std::cin >> replayChoice;
+        replayChoice= toupper(replayChoice);
+
+        if (replayChoice != 'Y') {
+            replay = false;
+        }
+        else {
+            // Reset the game board 
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    board[i][j] = (i * SIZE) + j + '1';
+                }
             }
-            return 0;
         }
 
-        // Switch to the other player
-        player = (player == 1) ? 2 : 1;
-    } while (true);
+    } while (replay);
 
     return 0;
 }
