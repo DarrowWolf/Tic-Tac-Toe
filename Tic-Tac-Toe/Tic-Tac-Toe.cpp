@@ -48,8 +48,19 @@ bool checkWin(char board[][SIZE], char symbol, bool& draw) {
     }
 
     //Check for Columns
-
+    for (int j = 0; j < SIZE; j++) {
+        if (board[0][j] == symbol && board[1][j] == symbol && board[2][j] == symbol) {
+            return true; // Player has won by completing a column
+        }
+    }
     //Check Diagonal 
+    if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+        return true; // Diagonal from top-left to bottom-right
+    }
+
+    if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+        return true; // Diagonal from top-right to bottom-left
+    }
 
     // Check for a draw
     for (int i = 0; i < SIZE; i++) {
